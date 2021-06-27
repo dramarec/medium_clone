@@ -24,6 +24,7 @@ const useFetch = url => {
                 setIsLoading(false)
             })
             .catch(error => {
+                console.log("🔥🚀 ===> useEffect ===> error", error.response);
                 setError(error.response.data)
                 setIsLoading(false)
             })

@@ -1,45 +1,70 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 
-const Authentication = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    // const [isSubmitting, setSubmitting] = useState(false);
+const Authentication = props => {
+    // console.log("🔥🚀 ===> props", props);
+    const isLogin = props.match.path === '/login/'
+    const pageTitle = isLogin ? 'Sign In' : 'Sign Up'
+    const descriptionLink = isLogin ? '/register' : '/login'
+    const descriptionText = isLogin ? 'Need an account?' : 'Have an account?'
+    const apiUrl = isLogin ? '/users/auth/login' : '/users/auth/register'
 
-    const [{ isLoading, error, response }, doFetch] = useFetch('/users/auth/login')
-    console.log('useFetch', isLoading, error, response)
+    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false)
+
+    const [{ isLoading, error, response }, doFetch] = useFetch(apiUrl)
+    // console.log('useFetch', isLoading, error, response)
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log('email :', email, password);
-        // setSubmitting(true);
+        const user = isLogin ? { email, password } : { username, email, password }
+        console.log("🔥🚀 ===> user", user);
         doFetch({
             method: 'post',
-            data: {
-                user: {
-                    email: 'qq@qq.com',
-                    password: '123'
-                }
-            }
+            data: user
         })
-        console.log('values', email, password)
     };
 
+    useEffect(() => {
+        if (!response) {
+            return
+        }
+        localStorage.setItem('token', response.data.token)
+        // console.log('response=>', response)
+        setIsSuccessfullSubmit(true)
+    }, [response])
+
+    if (isSuccessfullSubmit) {
+        return <Redirect to="/" />
+    }
 
     return (
         <div className="auth-page">
             <div className="container page">
                 <div className="row">
                     <div className="col-md-6 offset-md-3 col-xs-12">
-                        <h1 className="text-xs-center">Login</h1>
+                        <h1 className="text-xs-center">{pageTitle}</h1>
                         <p className="text-xs-center">
-                            <Link to="register" className="">
-                                Need an account
+                            <Link to={descriptionLink} className="">
+                                {descriptionText}
                             </Link>
                         </p>
                         <form onSubmit={handleSubmit}>
                             <fieldset>
+                                {!isLogin && (
+                                    <fieldset className="form-group">
+                                        <input
+                                            type="username"
+                                            className="form-control form-control-lg"
+                                            placeholder="Name"
+                                            value={username}
+                                            onChange={e => setUsername(e.target.value)}
+                                        />
+                                    </fieldset>
+                                )}
                                 <fieldset className="form-group">
                                     <input
                                         type="email"
@@ -64,10 +89,9 @@ const Authentication = () => {
                                 <button
                                     className="btn btn-lg btn-primary pull-xs-right"
                                     type="submit"
-                                    // disabled={isSubmitting}
                                     disabled={isLoading}
                                 >
-                                    Sign in
+                                    {pageTitle}
                                 </button>
                             </fieldset>
                         </form>

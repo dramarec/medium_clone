@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { CurrentUserContext } from '../../contexts/currentUser';
 import useFetch from '../../hooks/useFetch';
 import useLocalStorage from '../../hooks/useLocalStorage';
 
 const Authentication = props => {
-    // console.log("🔥🚀 ===> props", props);
     const isLogin = props.match.path === '/login/'
     const pageTitle = isLogin ? 'Sign In' : 'Sign Up'
     const descriptionLink = isLogin ? '/register' : '/login'
@@ -15,16 +15,19 @@ const Authentication = props => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false)
+
     // custom hooks
     const [{ isLoading, error, response }, doFetch] = useFetch(apiUrl)
     const [token, setToken] = useLocalStorage('token')
-
     console.log("🔥🚀 ===> token", token);
+
+    const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext)
+    console.log('currentUserState', currentUserState)
 
     const handleSubmit = e => {
         e.preventDefault()
         const user = isLogin ? { email, password } : { username, email, password }
-        // console.log("🔥🚀 ===> user", user);
+        console.log("🔥🚀 ===> user", user);
         doFetch({
             method: 'post',
             data: user
@@ -35,11 +38,16 @@ const Authentication = props => {
         if (!response) {
             return
         }
-        // localStorage.setItem('token', response.data.token)
+        console.log("🔥🚀 ===> useEffect ===> response", response);
         setToken(response.data.token)
-        // console.log('response=>', response)
         setIsSuccessfullSubmit(true)
-    }, [response, setToken])
+        setCurrentUserState(state => ({
+            ...state,
+            isLoggedIn: true,
+            isLoading: false,
+            currentUser: response.data.user
+        }))
+    }, [response, setToken, setCurrentUserState])
 
     if (isSuccessfullSubmit) {
         return <Redirect to="/" />

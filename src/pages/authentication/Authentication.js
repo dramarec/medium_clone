@@ -1,45 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import useFetch from '../../hooks/useFetch';
 
 const Authentication = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isSubmitting, setSubmitting] = useState(false);
+    // const [isSubmitting, setSubmitting] = useState(false);
+
+    const [{ isLoading, error, response }, doFetch] = useFetch('/users/auth/login')
+    console.log('useFetch', isLoading, error, response)
 
     const handleSubmit = e => {
         e.preventDefault();
         console.log('email :', email, password);
-        setSubmitting(true);
+        // setSubmitting(true);
+        doFetch({
+            method: 'post',
+            data: {
+                user: {
+                    email: 'qq@qq.com',
+                    password: '123'
+                }
+            }
+        })
+        console.log('values', email, password)
     };
 
-    useEffect(() => {
-        if (!isSubmitting) {
-            return;
-        }
-        console.log('useEffect :', useEffect);
-        document.title = email;
-        axios(
-            'https://medium-clone1303-default-rtdb.firebaseio.com/AIzaSyD5j7uS_J2tOkfx1npgV4rkfGNSw2k71_8',
-            {
-                method: 'post',
-                data: {
-                    user: {
-                        email: 'qwe@matchMedia.ru',
-                        password: '123',
-                    },
-                },
-            },
-        )
-            .then(res => {
-                console.log('succes', res);
-                setSubmitting(false);
-            })
-            .catch(err => {
-                console.log('error', err);
-                setSubmitting(false);
-            });
-    });
 
     return (
         <div className="auth-page">
@@ -78,7 +64,8 @@ const Authentication = () => {
                                 <button
                                     className="btn btn-lg btn-primary pull-xs-right"
                                     type="submit"
-                                    disabled={isSubmitting}
+                                    // disabled={isSubmitting}
+                                    disabled={isLoading}
                                 >
                                     Sign in
                                 </button>

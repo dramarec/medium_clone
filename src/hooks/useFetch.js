@@ -10,7 +10,6 @@ const useFetch = url => {
     const [error, setError] = useState(null)
     const [options, setOptions] = useState({})
     const [token] = useLocalStorage('token')
-    // console.log("🔥🚀 ===> options", options);
 
     const doFetch = useCallback((options = {}) => {
         setOptions(options)

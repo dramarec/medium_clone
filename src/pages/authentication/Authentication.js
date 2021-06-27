@@ -20,13 +20,12 @@ const Authentication = props => {
     // custom hooks
     const [{ isLoading, error, response }, doFetch] = useFetch(apiUrl)
     const [, setToken] = useLocalStorage('token')
-    const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext)
-    console.log("🔥🚀 ===> currentUserState", currentUserState);
+    const [, setCurrentUserState] = useContext(CurrentUserContext)
 
     const handleSubmit = e => {
         e.preventDefault()
         const user = isLogin ? { email, password } : { username, email, password }
-        console.log("🔥🚀 ===> user", user);
+        // console.log("🔥🚀 ===> user", user);
         doFetch({
             method: 'post',
             data: user
@@ -37,7 +36,7 @@ const Authentication = props => {
         if (!response) {
             return
         }
-        console.log("🔥🚀 ===> useEffect ===> response", response);
+        // console.log("🔥🚀 ===> useEffect ===> response", response);
         setToken(response.data.token)
         setIsSuccessfullSubmit(true)
         setCurrentUserState(state => ({

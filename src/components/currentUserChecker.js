@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useContext } from 'react'
 
 import { CurrentUserContext } from '../contexts/currentUser'
@@ -9,10 +8,9 @@ const CurrentUserChecker = ({ children }) => {
     const [{ response }, doFetch] = useFetch('/users/user')
     const [, setCurrentUserState] = useContext(CurrentUserContext)
     const [token] = useLocalStorage('token')
-    console.log("🔥🚀 ===> CurrentUserChecker ===> response", response);
+    // console.log("🔥🚀 ===> CurrentUserChecker ===> response", response);
 
     useEffect(() => {
-        console.log('init')
         if (!token) {
             setCurrentUserState(state => ({
                 ...state,
@@ -26,7 +24,7 @@ const CurrentUserChecker = ({ children }) => {
             ...state,
             isLoading: true
         }))
-    }, [])
+    }, [doFetch, setCurrentUserState, token])
 
     useEffect(() => {
         if (!response) {

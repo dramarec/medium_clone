@@ -5,8 +5,9 @@ import useLocalStorage from './useLocalStorage'
 
 const useFetch = url => {
     // const baseUrl = 'https://teamproject-book-read.herokuapp.com/api'
-    // const baseUrl = 'https://localhost:4000/api/users'
-    const baseUrl = 'http://localhost:4000/api/users'
+    // const baseUrl = 'http://localhost:4000/api'
+    const baseUrl = 'https://conduit.productionready.io/api'
+
     const [isLoading, setIsLoading] = useState(false)
     const [response, setResponse] = useState(null)
     const [error, setError] = useState(null)
@@ -27,7 +28,8 @@ const useFetch = url => {
             ...options,
             ...{
                 headers: {
-                    authorization: token ? `Bearer ${token}` : ''
+                    // authorization: token ? `Bearer ${token}` : ''
+                    authorization: token ? `Token ${token}` : ''
                 }
             }
         }
@@ -38,7 +40,7 @@ const useFetch = url => {
                 setIsLoading(false)
             })
             .catch(error => {
-                setError(error.response.data)
+                setError(error.response)
                 setIsLoading(false)
             })
 

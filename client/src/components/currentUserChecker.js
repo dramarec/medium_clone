@@ -6,11 +6,12 @@ import useLocalStorage from '../hooks/useLocalStorage'
 
 const CurrentUserChecker = ({ children }) => {
     // const [{ response }, doFetch] = useFetch('/users/user')
-    const [{ response }, doFetch] = useFetch('/current')
-
+    // const [{ response }, doFetch] = useFetch('/users/current')
     const [, setCurrentUserState] = useContext(CurrentUserContext)
+    const [{ response }, doFetch] = useFetch('/user')
+
     const [token] = useLocalStorage('token')
-    // console.log("🔥🚀 ===> CurrentUserChecker ===> response", response);
+    console.log("🔥🚀 ===> CurrentUserChecker ===> response", response);
 
     useEffect(() => {
         if (!token) {
@@ -37,7 +38,8 @@ const CurrentUserChecker = ({ children }) => {
             ...state,
             isLoggedIn: true,
             isLoading: false,
-            currentUser: response.data
+            // currentUser: response.data
+            currentUser: response.user
         }))
     }, [response, setCurrentUserState])
     return children

@@ -4,9 +4,9 @@ import { CurrentUserContext } from '../contexts/currentUser';
 
 const TopBar = () => {
     const [currentUserState] = useContext(CurrentUserContext)
-    // console.log("🔥🚀 ===> TopBar ===> currentUserState", currentUserState);
+    console.log("🔥🚀 ===> TopBar ===> currentUserState", currentUserState);
     const userImage =
-        (currentUserState.isLoggedIn && currentUserState.currentUser.image) ||
+        (currentUserState?.isLoggedIn && currentUserState?.currentUser?.image) ||
         'https://static.productionready.io/images/smiley-cyrus.jpg'
 
     return (
@@ -37,11 +37,11 @@ const TopBar = () => {
                             </li>
                             <li className="nav-item">
                                 <NavLink
-                                    to={`/profiles/${currentUserState.currentUser.username}`}
+                                    to={`/profiles/${currentUserState.currentUser?.username}`}
                                     className="nav-link"
                                 >
                                     <img className="user-pic" src={userImage} alt="" />
-                                    &nbsp; {currentUserState.currentUser.username}
+                                    &nbsp; {currentUserState.currentUser?.username}
                                 </NavLink>
                             </li>
                         </>

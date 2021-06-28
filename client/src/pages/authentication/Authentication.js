@@ -10,9 +10,9 @@ const Authentication = props => {
     const pageTitle = isLogin ? 'Sign In' : 'Sign Up'
     const descriptionLink = isLogin ? '/register' : '/login'
     const descriptionText = isLogin ? 'Need an account?' : 'Have an account?'
+    const apiUrl = isLogin ? '/users/login' : '/users'
     // const apiUrl = isLogin ? '/users/auth/login' : '/users/auth/register'
-    const apiUrl = isLogin ? '/login' : '/signup'
-
+    // const apiUrl = isLogin ? '/users/login' : '/users/signup'
 
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
@@ -30,7 +30,8 @@ const Authentication = props => {
         // console.log("🔥🚀 ===> user", user);
         doFetch({
             method: 'post',
-            data: user
+            // data: user
+            data: { user }
         })
     };
 
@@ -38,14 +39,17 @@ const Authentication = props => {
         if (!response) {
             return
         }
-        // console.log("🔥🚀 ===> useEffect ===> response", response);
-        setToken(response.data.token)
+        console.log("🔥🚀 ===> useEffect ===> response", response);
+
+        // setToken(response.data.token)
+        setToken(response.user.token)
         setIsSuccessfullSubmit(true)
         setCurrentUserState(state => ({
             ...state,
             isLoggedIn: true,
             isLoading: false,
-            currentUser: response.data.user
+            // currentUser: response.data.user
+            currentUser: response.user
         }))
     }, [response, setToken, setCurrentUserState])
 

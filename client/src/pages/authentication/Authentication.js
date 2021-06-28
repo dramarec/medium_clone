@@ -39,7 +39,7 @@ const Authentication = props => {
         if (!response) {
             return
         }
-        console.log("🔥🚀 ===> useEffect ===> response", response);
+        // console.log("🔥🚀 ===> useEffect ===> response", response);
 
         // setToken(response.data.token)
         setToken(response.user.token)

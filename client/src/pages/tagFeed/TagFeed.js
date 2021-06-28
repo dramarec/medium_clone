@@ -1,63 +1,53 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import { stringify } from 'query-string'
 
-import Feed from '../../components/feed'
-import Pagination from '../../components/pagination'
-import useFetch from '../../hooks/useFetch'
 import { getPaginator, limit } from '../../utils'
-import PopularTags from '../../components/popularTags'
+import useFetch from '../../hooks/useFetch'
+import FeedToggler from '../../components/feedToggler'
 import Loading from '../../components/loading'
 import ErrorMessage from '../../components/errorMessage'
-import FeedToggler from '../../components/feedToggler'
+import Feed from '../../components/feed'
+import Pagination from '../../components/pagination'
+import PopularTags from '../../components/popularTags'
+import Banner from '../../components/banner'
 
-const GlobalFeed = props => {
-    // console.log("🔥🚀 ===> props", props);
-    const { offset, currentPage } = getPaginator(props.location.search)
+const TagFeed = ({ location, match }) => {
+    const tagName = match.params.slug
+    console.log('tagName', tagName)
+
+    const { offset, currentPage } = getPaginator(location.search)
     const stringifiedParams = stringify({
         limit,
-        offset
+        offset,
+        tag: tagName
     })
-
-    // const apiUrl = '/contacts?limit=5&offset=0'
-    // const apiUrl = '/articles?limit=10&offset=0'
     const apiUrl = `/articles?${stringifiedParams}`
-    const currentUrl = props.match.url
-
+    const currentUrl = match.url
     const [{ response, error, isLoading }, doFetch] = useFetch(apiUrl)
-    // console.log('GlobalFeed res=>', response, error, isLoading)
 
     useEffect(() => {
         doFetch()
-    }, [doFetch, currentPage])
+    }, [currentPage, doFetch, tagName])
 
     return (
         <div className="home-page">
-            <div className="banner">
-                <h1>Medium Clone</h1>
-                <p>A place to share knowledge</p>
-            </div>
+            <Banner />
             <div className="container page">
-                <div className="row"> 
+                <div className="row">
                     <div className="col-md-9">
-
-                        <FeedToggler />
+                        <FeedToggler tagName={tagName} />
                         {isLoading && <Loading />}
                         {error && <ErrorMessage />}
                         {!isLoading && response && (
-                            <>
-                                {/* <Feed articles={response.data.contacts} /> */}
+                            <Fragment>
                                 <Feed articles={response.articles} />
                                 <Pagination
                                     total={response.articlesCount}
                                     limit={limit}
                                     url={currentUrl}
                                     currentPage={currentPage}
-                                // моковые данные 🙂
-                                // limit={10}
-                                // url='/'
-                                // currentPage={2}
                                 />
-                            </>
+                            </Fragment>
                         )}
                     </div>
                     <div className="col-md-3">
@@ -68,4 +58,5 @@ const GlobalFeed = props => {
         </div>
     )
 }
-export default GlobalFeed;
+
+export default TagFeed

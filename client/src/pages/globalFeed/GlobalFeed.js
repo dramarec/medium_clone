@@ -1,16 +1,30 @@
 import React, { useEffect } from 'react'
-import Feed from '../../components/feed'
-import useFetch from '../../hooks/useFetch'
+import { stringify } from 'query-string'
 
-const GlobalFeed = () => {
-    const apiUrl = '/articles?limit=10&offset=0'
+import Feed from '../../components/feed'
+import Pagination from '../../components/pagination'
+import useFetch from '../../hooks/useFetch'
+import { getPaginator, limit } from '../../utils'
+
+const GlobalFeed = props => {
+    console.log("🔥🚀 ===> props", props);
+    const { offset, currentPage } = getPaginator(props.location.search)
+    const stringifiedParams = stringify({
+        limit,
+        offset
+    })
+
     // const apiUrl = '/contacts?limit=5&offset=0'
+    // const apiUrl = '/articles?limit=10&offset=0'
+    const apiUrl = `/articles?${stringifiedParams}`
+    const currentUrl = props.match.url
+
     const [{ response, error, isLoading }, doFetch] = useFetch(apiUrl)
-    console.log('GlobalFeed res=>', response, error, isLoading)
+    // console.log('GlobalFeed res=>', response, error, isLoading)
 
     useEffect(() => {
         doFetch()
-    }, [doFetch])
+    }, [doFetch, currentPage])
 
     return (
         <div className="home-page">
@@ -27,6 +41,16 @@ const GlobalFeed = () => {
                             <>
                                 {/* <Feed articles={response.data.contacts} /> */}
                                 <Feed articles={response.articles} />
+                                <Pagination
+                                    total={response.articlesCount}
+                                    limit={limit}
+                                    url={currentUrl}
+                                    currentPage={currentPage}
+                                    // моковые данные 🙂
+                                    // limit={10}
+                                    // url='/'
+                                    // currentPage={2}
+                                />
                             </>
                         )}
                     </div>

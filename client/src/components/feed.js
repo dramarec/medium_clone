@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Feed = ({ articles }) => {
-    console.log("🔥🚀 ===> Feed ===> articles", articles);
+    // console.log("🔥🚀 ===> Feed ===> articles", articles);
     return (
         <div>
             {articles?.map((article, index) => (

@@ -9,9 +9,8 @@ const CurrentUserChecker = ({ children }) => {
     // const [{ response }, doFetch] = useFetch('/users/current')
     const [, setCurrentUserState] = useContext(CurrentUserContext)
     const [{ response }, doFetch] = useFetch('/user')
-
     const [token] = useLocalStorage('token')
-    console.log("🔥🚀 ===> CurrentUserChecker ===> response", response);
+    // console.log("🔥🚀 ===> CurrentUserChecker ===> response", response)
 
     useEffect(() => {
         if (!token) {

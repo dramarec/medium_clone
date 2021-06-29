@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import TagList from './tagList';
 
 const Feed = ({ articles }) => {
-    console.log("🔥🚀 ===> Feed ===> articles", articles);
+    // console.log("🔥🚀 ===> Feed ===> articles", articles);
     return (
         <div>
             {articles?.map((article, index) => (

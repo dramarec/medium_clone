@@ -9,9 +9,9 @@ const CreateArticle = () => {
     const apiUrl = '/articles'
     const [{ response, error }, doFetch] = useFetch(apiUrl)
     const [currentUserState] = useContext(CurrentUserContext)
-    console.log("🔥🚀 ===> CreateArticle ===> currentUserState", currentUserState);
-
     const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false)
+    
+    console.log("🔥🚀 ===> CreateArticle ===> currentUserState", currentUserState);
 
     const onSubmit = article => {
         // console.log("🔥🚀 ===> CreateArticle ===> article", article);
@@ -44,7 +44,7 @@ const CreateArticle = () => {
     // if (!isSuccessfullSubmit || currentUserState.isLoggedIn === false) {
     //     return <Redirect to="/" />
     // }
-    if (currentUserState.isLoggedIn === null) {
+    if (currentUserState.isLoggedIn === false) {
         return <Redirect to="/" />
     }
 

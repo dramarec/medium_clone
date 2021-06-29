@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+
 import { CurrentUserContext } from '../../contexts/currentUser';
 import useFetch from '../../hooks/useFetch';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -10,28 +11,24 @@ const Authentication = props => {
     const pageTitle = isLogin ? 'Sign In' : 'Sign Up'
     const descriptionLink = isLogin ? '/register' : '/login'
     const descriptionText = isLogin ? 'Need an account?' : 'Have an account?'
-    const apiUrl = isLogin ? '/users/login' : '/users'
-    // const apiUrl = isLogin ? '/users/auth/login' : '/users/auth/register'
-    // const apiUrl = isLogin ? '/users/login' : '/users/signup'
+    const apiUrl = isLogin ? '/users/login' : '/users' // const apiUrl = isLogin ? '/users/login' : '/users/signup' //my server
 
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false)
-
     // custom hooks
     const [{ isLoading, error, response }, doFetch] = useFetch(apiUrl)
     const [, setToken] = useLocalStorage('token')
-    const [, setCurrentUserState] = useContext(CurrentUserContext)
+    const [, dispatch] = useContext(CurrentUserContext)
+    // const [, setCurrentUserState] = useContext(CurrentUserContext)
 
     const handleSubmit = e => {
         e.preventDefault()
         const user = isLogin ? { email, password } : { username, email, password }
-        // console.log("🔥🚀 ===> user", user);
         doFetch({
             method: 'post',
-            // data: user
-            data: { user }
+            data: { user } // data: user
         })
     };
 
@@ -39,19 +36,18 @@ const Authentication = props => {
         if (!response) {
             return
         }
-        // console.log("🔥🚀 ===> useEffect ===> response", response);
 
-        // setToken(response.data.token)
-        setToken(response.user.token)
+        setToken(response.user.token)// setToken(response.data.token)
         setIsSuccessfullSubmit(true)
-        setCurrentUserState(state => ({
-            ...state,
-            isLoggedIn: true,
-            isLoading: false,
-            // currentUser: response.data.user
-            currentUser: response.user
-        }))
-    }, [response, setToken, setCurrentUserState])
+        dispatch({ type: 'SET_AUTHORIZED', payload: response.user })
+        // setCurrentUserState(state => ({
+        //     ...state,
+        //     isLoggedIn: true,
+        //     isLoading: false,
+        //     currentUser: response.user // currentUser: response.data.user
+        // }))
+        // }, [response, setToken, setCurrentUserState])
+    }, [response, setToken, dispatch])
 
     if (isSuccessfullSubmit) {
         return <Redirect to="/" />

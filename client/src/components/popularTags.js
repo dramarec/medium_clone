@@ -7,7 +7,7 @@ import Loading from './loading'
 
 const PopularTags = () => {
     const [{ response, isLoading, error }, doFetch] = useFetch('/tags')
-    console.log("🔥🚀 ===> PopularTags ===> response", response);
+    // console.log("🔥🚀 ===> PopularTags ===> response", response);
 
     useEffect(() => {
         doFetch()

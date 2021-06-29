@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import AddToFavorites from './addToFavorites';
 import TagList from './tagList';
 
 const Feed = ({ articles }) => {
@@ -21,6 +22,14 @@ const Feed = ({ articles }) => {
                             <span className="date">{article.createdAt}</span>
                         </div>
 
+                        <div className="pull-xs-right">
+                            <AddToFavorites
+                                isFavorited={article.favorited}
+                                favoritesCount={article.favoritesCount}
+                                articleSlug={article.slug}
+                            />
+                        </div>
+
                     </div>
 
                     <Link className="preview-link" to={`/articles/${article.slug}`}>
@@ -31,13 +40,6 @@ const Feed = ({ articles }) => {
 
                         <TagList tags={article.tagList} />
 
-                        {/* <ul className="tag-list">
-                            {article.tagList.map(tag => (
-                                <li key={tag} className="tag-default tag pill tag-outline">
-                                    {tag}
-                                </li>
-                            ))}
-                        </ul> */}
                     </Link>
                 </div>
             ))}
